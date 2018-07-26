@@ -1,58 +1,37 @@
-var Accessory, Service, Characteristic, UUIDGen, Types;
+// var Accessory, Service, Characteristic, UUIDGen, Types;
 
-const wpi = require('wiringpi-node');
+let pin
+
+const gpio = require('onoff').Gpio;
 
 module.exports = function(homebridge) {
-    console.log("homebridge-gpio-device API version: " + homebridge.version);
+    console.log("homebridge-gpio-device API version: " + homebridge.version)
 
     // Accessory must be created from PlatformAccessory Constructor
-    Accessory = homebridge.platformAccessory;
+    const Accessory = homebridge.platformAccessory;
 
     // Service and Characteristic are from hap-nodejs
-    Service = homebridge.hap.Service;
-    Characteristic = homebridge.hap.Characteristic;
-    UUIDGen = homebridge.hap.uuid;
-    Types = homebridge.hapLegacyTypes;
+    const Service = homebridge.hap.Service;
+    const Characteristic = homebridge.hap.Characteristic;
+    const UUIDGen = homebridge.hap.uuid;
+    const Types = homebridge.hapLegacyTypes;
 
-    homebridge.registerAccessory("homebridge-gpio-device", "GPIODevice", DeviceAccesory);
+    homebridge.registerAccessory('homebridge-buzz-in', "BuzzInDoor", DeviceAccesory);
 }
 
 function DeviceAccesory(log, config) {
   this.services = [];
   
-  if(!config.type) throw new Error("'type' parameter is missing");
   if(!config.name) throw new Error("'name' parameter is missing for accessory " + config.type);
   if(!config.pin && !config.pins) throw new Error("'pin(s)' parameter is missing for accessory " + config.name);
   
   var infoService = new Service.AccessoryInformation();
-  infoService.setCharacteristic(Characteristic.Manufacturer, 'Raspberry')
+  infoService.setCharacteristic(Characteristic.Manufacturer, 'Jacob Ford')
   infoService.setCharacteristic(Characteristic.Model, config.type)
   //infoService.setCharacteristic(Characteristic.SerialNumber, 'Raspberry');
-  this.services.push(infoService);
+  this.services.push(infoService)
   
-  switch(config.type) {
-    case 'ContactSensor':
-      this.device = new DigitalInput(this, log, config);
-    break;
-    case 'Switch':
-    case 'Lightbulb':
-    case 'Outlet':
-      this.device = new DigitalOutput(this, log, config);
-    break;
-    case 'MotionSensor':
-      this.device = new PIRSensor(this, log, config);
-    break;
-    case 'Window':
-    case 'WindowCovering':
-      this.device = new RollerShutter(this, log, config);
-    break;
-    case 'LockMechanism':
-      this.device = new LockMechanism(this, log, config);
-    break;
-    default:
-      throw new Error("Unknown 'type' parameter : " + config.type);
-    break;
-  }
+  this.device = new LockMechanism
 }
 
 function LockMechanism(accesory, log, config) {
@@ -61,8 +40,8 @@ function LockMechanism(accesory, log, config) {
   this.inverted = config.inverted || false;
   this.duration = config.duration || false;
   
-  wpi.pinMode(this.pin, wpi.OUTPUT);
-  wpi.digitalWrite(this.pin, this.inverted ? wpi.HIGH : wpi.LOW);
+  this.gpio = new gpio(this.pin, 'out')
+  this.gpio.writeSync(this.inverted ? 1 : 0) // lock
   
   this.service = new Service[config.type](config.name);
   this.target = this.service.getCharacteristic(Characteristic.LockTargetState)
@@ -76,31 +55,31 @@ function LockMechanism(accesory, log, config) {
 }
 
 LockMechanism.prototype = {
-    setLockState: function(value, callback) {
-      var that = this;
-    var OPEN = this.inverted ? wpi.LOW : wpi.HIGH;
-    var CLOSE = this.inverted ? wpi.HIGH : wpi.LOW;
+  setLockState: function(value, callback) {
+    var that = this;
+    var OPEN = this.inverted ? 0 : 1;
+    var CLOSE = this.inverted ? 1 : 0;
     
     if(value == Characteristic.LockTargetState.UNSECURED) {
-      wpi.digitalWrite(this.pin, OPEN);
+      that.gpio.writeSync(OPEN)
       this.state.updateValue(Characteristic.LockCurrentState.UNSECURED);
       callback();
       if(this.duration) {
         setTimeout(function(){
-          wpi.digitalWrite(that.pin, CLOSE);
+          that.gpio.writeSync(CLOSE)
           that.target.updateValue(Characteristic.LockTargetState.SECURED);
           that.state.updateValue(Characteristic.LockCurrentState.SECURED);
         }, this.duration * 1000);
       }
     } else {
-      wpi.digitalWrite(that.pin, CLOSE);
+      that.gpio.writeSync(OPEN)
       this.state.updateValue(Characteristic.LockCurrentState.SECURED);
       callback();
     }
   },
   
   getLockState: function(callback) {
-    var state = wpi.digitalRead(this.pin);
+    var state = this.gpio.readState();
     if(this.inverted)
       state = !state;
     callback(null, state ? Characteristic.LockCurrentState.UNSECURED : Characteristic.LockCurrentState.SECURED);
