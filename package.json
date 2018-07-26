@@ -4,7 +4,8 @@
   "description": "Slap a relay to yer GPIO, slap the relay to your intercom, and now we apartmentdwellers can let the Amazon guys in when they call.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "hb": "DEBUG=* homebridge -D -P ./"
   },
   "repository": {
     "type": "git",
