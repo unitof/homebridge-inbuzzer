@@ -1,0 +1,25 @@
+{
+  "name": "homebridge-inbuzzer",
+  "version": "0.0.0",
+  "description": "Slap a relay to yer GPIO, slap the relay to your intercom, and now we apartmentdwellers can let the Amazon guys in when they call.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/unitof/homebridge-inbuzzer.git"
+  },
+  "keywords": [
+    "homebridge-plugin",
+    "raspberry-pi",
+    "relay",
+    "intercom"
+  ],
+  "author": "Jacob Ford",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/unitof/homebridge-inbuzzer/issues"
+  },
+  "homepage": "https://github.com/unitof/homebridge-inbuzzer#readme"
+}
