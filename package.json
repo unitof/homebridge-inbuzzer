@@ -22,6 +22,10 @@
     "url": "https://github.com/unitof/homebridge-inbuzzer/issues"
   },
   "homepage": "https://github.com/unitof/homebridge-inbuzzer#readme",
+  "engines": {
+    "node": ">=9.0.0",
+    "homebridge": ">=0.2.0"
+  },
   "dependencies": {
     "onoff": "^3.2.0"
   }
