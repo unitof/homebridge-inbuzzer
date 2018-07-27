@@ -8,13 +8,13 @@ module.exports = function(homebridge) {
     console.log("homebridge-gpio-device API version: " + homebridge.version)
 
     // Accessory must be created from PlatformAccessory Constructor
-    const Accessory = homebridge.platformAccessory;
+    Accessory = homebridge.platformAccessory;
 
     // Service and Characteristic are from hap-nodejs
-    const Service = homebridge.hap.Service;
-    const Characteristic = homebridge.hap.Characteristic;
-    const UUIDGen = homebridge.hap.uuid;
-    const Types = homebridge.hapLegacyTypes;
+    Service = homebridge.hap.Service;
+    Characteristic = homebridge.hap.Characteristic;
+    UUIDGen = homebridge.hap.uuid;
+    Types = homebridge.hapLegacyTypes;
 
     homebridge.registerAccessory('homebridge-buzz-in', "BuzzInDoor", DeviceAccesory);
 }
