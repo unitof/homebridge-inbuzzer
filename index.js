@@ -1,7 +1,5 @@
 // var Accessory, Service, Characteristic, UUIDGen, Types;
 
-let pin
-
 const gpio = require('onoff').Gpio;
 
 module.exports = function(homebridge) {
