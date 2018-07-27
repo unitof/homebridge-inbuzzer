@@ -5,18 +5,18 @@ let pin
 const gpio = require('onoff').Gpio;
 
 module.exports = function(homebridge) {
-    console.log("homebridge API version: " + homebridge.version)
+  console.log("homebridge API version: " + homebridge.version)
 
-    // Accessory must be created from PlatformAccessory Constructor
-    Accessory = homebridge.platformAccessory;
+  // Accessory must be created from PlatformAccessory Constructor
+  Accessory = homebridge.platformAccessory;
 
-    // Service and Characteristic are from hap-nodejs
-    Service = homebridge.hap.Service;
-    Characteristic = homebridge.hap.Characteristic;
-    UUIDGen = homebridge.hap.uuid;
-    Types = homebridge.hapLegacyTypes;
+  // Service and Characteristic are from hap-nodejs
+  Service = homebridge.hap.Service;
+  Characteristic = homebridge.hap.Characteristic;
+  UUIDGen = homebridge.hap.uuid;
+  Types = homebridge.hapLegacyTypes;
 
-    homebridge.registerAccessory('homebridge-inbuzzer', 'DoorBuzzer', DoorBuzzer);
+  homebridge.registerAccessory('homebridge-inbuzzer', 'DoorBuzzer', DoorBuzzer);
 }
 
 function DoorBuzzer(log, config) {
