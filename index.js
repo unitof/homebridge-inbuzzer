@@ -32,6 +32,18 @@ function DoorBuzzer(log, config) {
   this.device = new LockMechanism(this, log, config)
 }
 
+// TODO: really, should these both just be combined with below?
+
+DoorBuzzer.prototype = {
+  getServices: function() {
+    return this.services;
+  },
+  
+  addService: function(service) {
+    this.services.push(service);
+  }
+}
+
 function LockMechanism(accessory, log, config) {
   this.log = log;
   this.pin = config.pin;
