@@ -52,7 +52,7 @@ function LockMechanism(accessory, log, config) {
 
   this.gpio.writeSync(this.inverted ? 1 : 0) // lock
   
-  this.service = new Service[config.type](config.name);
+  this.service = new Service.LockMechanism(config.name);
   this.target = this.service.getCharacteristic(Characteristic.LockTargetState)
     .on('set', this.setLockState.bind(this))
     .updateValue(Characteristic.LockTargetState.SECURED);
