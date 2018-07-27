@@ -16,10 +16,10 @@ module.exports = function(homebridge) {
     UUIDGen = homebridge.hap.uuid;
     Types = homebridge.hapLegacyTypes;
 
-    homebridge.registerAccessory('homebridge-buzz-in', "BuzzInDoor", DeviceAccesory);
+    homebridge.registerAccessory('homebridge-inbuzzer', 'DoorBuzzer', DoorBuzzer);
 }
 
-function DeviceAccesory(log, config) {
+function DoorBuzzer(log, config) {
   this.services = [];
   
   if(!config.name) throw new Error("'name' parameter is missing for accessory " + config.type);
