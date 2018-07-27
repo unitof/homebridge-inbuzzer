@@ -37,8 +37,19 @@ function LockMechanism(accessory, log, config) {
   this.pin = config.pin;
   this.inverted = config.inverted || false;
   this.duration = config.duration || false;
-  
-  this.gpio = new gpio(this.pin, 'out')
+
+  if (gpio && gpio.accessible) {
+    this.gpio = new gpio(this.pin, 'out')
+  } else {
+    console.warn('GPIO not accessible. (You sure this is a Pi?)')
+    console.log('Will simulate locking/unlocking in console.')
+    this.gpio = {
+      writeSync: function (value) {
+        console.log('virtual lock now has value: ' + value);
+      }
+    };
+  }
+
   this.gpio.writeSync(this.inverted ? 1 : 0) // lock
   
   this.service = new Service[config.type](config.name);
