@@ -31,10 +31,10 @@ function DoorBuzzer(log, config) {
   //infoService.setCharacteristic(Characteristic.SerialNumber, 'Raspberry');
   this.services.push(infoService)
   
-  this.device = new LockMechanism
+  this.device = new LockMechanism(this, log, config)
 }
 
-function LockMechanism(accesory, log, config) {
+function LockMechanism(accessory, log, config) {
   this.log = log;
   this.pin = config.pin;
   this.inverted = config.inverted || false;
@@ -51,7 +51,7 @@ function LockMechanism(accesory, log, config) {
     .on('get', this.getLockState.bind(this))
     .updateValue(Characteristic.LockCurrentState.SECURED);
   
-  accesory.addService(this.service);
+  accessory.addService(this.service);
 }
 
 LockMechanism.prototype = {
